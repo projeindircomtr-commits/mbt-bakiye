@@ -85,10 +85,11 @@ class MainActivity : Activity() {
         findViewById<Button>(R.id.btnIzin).setOnClickListener { bildirimIzniIste() }
         findViewById<View>(R.id.btnCikis).setOnClickListener {
             AlertDialog.Builder(this).setMessage("Çıkış yapılsın mı?")
-                .setPositiveButton("Çıkış yap") { _, _ -> Api.sifreKaydet(this, null); girisEkrani() }
+                .setPositiveButton("Çıkış yap") { _, _ -> Api.sifreKaydet(this, null); TakipServisi.durdur(this); girisEkrani() }
                 .setNegativeButton("Vazgeç", null).show()
         }
         KontrolWorker.planla(this)
+        TakipServisi.baslat(this)
         izinKartiniGuncelle()
         handler.removeCallbacks(periyodik)
         handler.post(periyodik)
@@ -175,6 +176,7 @@ class MainActivity : Activity() {
 
     private fun sifreGecersiz() {
         Api.sifreKaydet(this, null)
+        TakipServisi.durdur(this)
         Toast.makeText(this, "Şifre değişmiş, tekrar giriş yap", Toast.LENGTH_LONG).show()
         girisEkrani()
     }
