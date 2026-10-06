@@ -11,6 +11,20 @@
             android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="12dp"
             android:layout_marginBottom="16dp" />
 
+        <LinearLayout android:id="@+id/kartIzin" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:background="@drawable/kart_uyari" android:padding="18dp"
+            android:layout_marginBottom="16dp" android:visibility="gone">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Bildirimler kapalı" android:textColor="@color/lacivert"
+                android:textSize="17sp" android:textStyle="bold" />
+            <TextView android:id="@+id/txtIzin" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Para geldiğinde haber alman için aşağıdaki düğmeye bas ve İzin ver de."
+                android:textColor="@color/lacivert" android:textSize="15sp" android:layout_marginTop="4dp" />
+            <Button android:id="@+id/btnIzin" android:layout_width="match_parent" android:layout_height="52dp"
+                android:text="Bildirimleri aç" android:textAllCaps="false" android:textSize="17sp"
+                android:textColor="#FFFFFF" android:background="@drawable/buton" android:layout_marginTop="12dp" />
+        </LinearLayout>
+
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical" android:background="@drawable/kart_bakiye" android:padding="22dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -36,5 +50,9 @@
         <Button android:id="@+id/btnYenile" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Yenile" android:textAllCaps="false" android:textColor="#FFFFFF"
             android:background="@drawable/buton" android:layout_marginTop="8dp" />
+
+        <TextView android:id="@+id/btnCikis" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Çıkış yap" android:textColor="#6B7686" android:padding="12dp"
+            android:layout_gravity="center_horizontal" android:layout_marginTop="16dp" />
     </LinearLayout>
 </ScrollView>

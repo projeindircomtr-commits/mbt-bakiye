@@ -1,16 +1,13 @@
 package com.projeindir.mbtbakiye
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 
 object Bildirim {
     const val KANAL = "gelirler"
@@ -28,9 +25,7 @@ object Bildirim {
     fun yenileriBildir(ctx: Context, bekleyen: List<Gelir>) {
         val pref = ctx.getSharedPreferences("mbt", Context.MODE_PRIVATE)
         val bildirilen = pref.getStringSet("bildirilen", emptySet())!!.toMutableSet()
-        if (Build.VERSION.SDK_INT >= 33 &&
-            ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-        ) return
+        if (!NotificationManagerCompat.from(ctx).areNotificationsEnabled()) return
         kanalOlustur(ctx)
         for (g in bekleyen) {
             if (g.id.toString() in bildirilen) continue
@@ -44,8 +39,9 @@ object Bildirim {
             )
             val n = NotificationCompat.Builder(ctx, KANAL)
                 .setSmallIcon(R.drawable.ic_bildirim)
-                .setContentTitle("Yeni gelir geldi")
-                .setContentText("Görmek ve onaylamak için dokun")
+                .setContentTitle("Yeni satın alma gerçekleşti")
+                .setContentText("Onay verme sürecini başlat ve bakiyeye ekle")
+                .setStyle(NotificationCompat.BigTextStyle().bigText("Onay verme sürecini başlat ve bakiyeye ekle"))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pi)

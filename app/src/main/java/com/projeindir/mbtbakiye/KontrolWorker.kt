@@ -5,12 +5,17 @@ import androidx.work.*
 import java.util.concurrent.TimeUnit
 
 class KontrolWorker(ctx: Context, p: WorkerParameters) : Worker(ctx, p) {
-    override fun doWork(): Result = try {
-        val d = Api.durum()
-        Bildirim.yenileriBildir(applicationContext, d.bekleyen)
-        Result.success()
-    } catch (e: Exception) {
-        Result.retry()
+    override fun doWork(): Result {
+        val sifre = Api.sifre(applicationContext) ?: return Result.success()
+        return try {
+            val d = Api.durum(sifre)
+            Bildirim.yenileriBildir(applicationContext, d.bekleyen)
+            Result.success()
+        } catch (e: SifreHatasi) {
+            Result.success()
+        } catch (e: Exception) {
+            Result.retry()
+        }
     }
 
     companion object {

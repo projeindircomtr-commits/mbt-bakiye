@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center_vertical"
+    android:background="@color/kagit" android:padding="28dp">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="MBT Bakiye" android:textColor="@color/lacivert"
+        android:textSize="28sp" android:textStyle="bold" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Şifreni yaz ve giriş yap" android:textColor="#6B7686"
+        android:textSize="16sp" android:layout_marginBottom="20dp" />
+
+    <EditText android:id="@+id/edtSifre" android:layout_width="match_parent" android:layout_height="56dp"
+        android:hint="Şifre" android:inputType="textPassword" android:background="@drawable/kart_satir"
+        android:paddingStart="16dp" android:paddingEnd="16dp" android:textSize="18sp"
+        android:textColor="@color/lacivert" android:singleLine="true" android:imeOptions="actionDone" />
+
+    <TextView android:id="@+id/txtGirisHata" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textColor="#B4443A" android:layout_marginTop="8dp" />
+
+    <Button android:id="@+id/btnGiris" android:layout_width="match_parent" android:layout_height="56dp"
+        android:text="Giriş yap" android:textAllCaps="false" android:textSize="18sp"
+        android:textColor="#FFFFFF" android:background="@drawable/buton" android:layout_marginTop="12dp" />
+</LinearLayout>

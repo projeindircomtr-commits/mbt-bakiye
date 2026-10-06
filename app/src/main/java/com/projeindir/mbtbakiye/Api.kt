@@ -1,5 +1,6 @@
 package com.projeindir.mbtbakiye
 
+import android.content.Context
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -9,25 +10,29 @@ import java.util.Locale
 
 data class Gelir(val id: Int, val tutar: Long)
 data class Durum(val toplam: Long, val bekleyen: List<Gelir>)
+class SifreHatasi : Exception("Şifre yanlış")
 
 object Api {
     private const val ADRES = "https://projeindir.com.tr/mbt/api.php"
-    private const val ANAHTAR = "18d448a5719ff107b855d8437da96c94" // panel config.php ile aynı
 
-    private fun istek(islem: String, post: Map<String, String> = emptyMap()): JSONObject {
-        val url = URL("$ADRES?islem=$islem&key=$ANAHTAR")
-        val c = url.openConnection() as HttpURLConnection
+    fun sifre(ctx: Context): String? =
+        ctx.getSharedPreferences("mbt", Context.MODE_PRIVATE).getString("sifre", null)
+
+    fun sifreKaydet(ctx: Context, s: String?) =
+        ctx.getSharedPreferences("mbt", Context.MODE_PRIVATE).edit().putString("sifre", s).apply()
+
+    private fun istek(sifre: String, islem: String, ek: Map<String, String> = emptyMap()): JSONObject {
+        val c = URL("$ADRES?islem=$islem").openConnection() as HttpURLConnection
         c.connectTimeout = 15000
         c.readTimeout = 15000
-        c.setRequestProperty("User-Agent", "MBTBakiye/1.0")
-        if (post.isNotEmpty()) {
-            c.requestMethod = "POST"
-            c.doOutput = true
-            val govde = (post + ("key" to ANAHTAR)).entries.joinToString("&") {
-                it.key + "=" + URLEncoder.encode(it.value, "UTF-8")
-            }
-            c.outputStream.use { it.write(govde.toByteArray()) }
+        c.setRequestProperty("User-Agent", "MBTBakiye/1.1")
+        c.requestMethod = "POST"
+        c.doOutput = true
+        val govde = (ek + ("sifre" to sifre)).entries.joinToString("&") {
+            it.key + "=" + URLEncoder.encode(it.value, "UTF-8")
         }
+        c.outputStream.use { it.write(govde.toByteArray()) }
+        if (c.responseCode == 403) { c.disconnect(); throw SifreHatasi() }
         val metin = c.inputStream.bufferedReader().use { it.readText() }
         c.disconnect()
         val j = JSONObject(metin)
@@ -44,8 +49,8 @@ object Api {
         return Durum(j.getLong("toplam"), liste)
     }
 
-    fun durum(): Durum = coz(istek("durum"))
-    fun onayla(id: Int): Durum = coz(istek("onayla", mapOf("id" to id.toString())))
+    fun durum(sifre: String): Durum = coz(istek(sifre, "durum"))
+    fun onayla(sifre: String, id: Int): Durum = coz(istek(sifre, "onayla", mapOf("id" to id.toString())))
 
     fun tl(kurus: Long): String {
         val f = NumberFormat.getNumberInstance(Locale("tr", "TR"))
